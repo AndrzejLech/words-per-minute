@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Colors} from "../../utils/enums/colors";
 import {WordsGenerator} from "../../utils/handlers/words-generator";
 import {Settings} from "../../utils/enums/settings";
+import {TimerHandler} from "../../utils/handlers/timer-handler";
 
 @Component({
   selector: 'app-type-box',
@@ -10,12 +11,16 @@ import {Settings} from "../../utils/enums/settings";
 })
 export class TypeBoxComponent implements OnInit {
   input: string = ''
-  index = 0
+  index: number = 0
+  goodWords: number = 0
+  timerState: boolean = false
 
 
   constructor(
-    private wordsGenerator: WordsGenerator
+    private wordsGenerator: WordsGenerator,
+    private timerHandler: TimerHandler
   ) {
+    timerHandler.timerStateObservable.subscribe(state => this.timerState = state)
   }
 
   ngOnInit(): void {
@@ -23,25 +28,48 @@ export class TypeBoxComponent implements OnInit {
 
   onClick(event: any) {
     if (event.key === ' ' || event.key === 'Enter') {
-      if (this.index === Settings.NUMBER_OF_WORDS ) {
-        // TODO: show popup with score
-        this.reset()
+      if (!this.timerState) {
+        this.timerHandler.startTimer()
+        this.timerHandler.setTimerState(true)
+      }
+
+      if (event.key === ' ') {
+        this.input = this.input.trim()
       }
 
       if (this.getWord(this.index) === this.input) {
-        this.colorWord(this.index, Colors.GOOD)
+        this.colorWord(this.index, Colors.CORRECT)
+        this.goodWords++
       } else {
-        this.colorWord(this.index, Colors.BAD)
+        this.colorWord(this.index, Colors.WRONG)
       }
 
-      console.log(this.index)
       this.index++
       this.input = ''
+
+
+      if (this.index === Settings.NUMBER_OF_WORDS) {
+        // TODO: show popup with score
+        this.reset()
+      }else{
+        this.colorWord(this.index, Colors.AMBER)
+      }
+
+      if (this.index != 0) {
+        this.colorWord(this.index, Colors.AMBER)
+      }
     }
   }
 
   private colorWord(index: number, color: Colors) {
-    document.getElementById("id" + String(index))!.style.color = color
+    document.getElementById("id" + String(index))!.classList.add(color)
+    if(color != Colors.AMBER) {
+      document.getElementById("id" + String(index))!.classList.remove(Colors.AMBER)
+    }
+  }
+
+  private removeColor(index: number){
+    document.getElementById("id" + String(index))!.classList.remove(Colors.AMBER, Colors.WRONG, Colors.CORRECT)
   }
 
   private getWord(index: number): string {
@@ -51,10 +79,13 @@ export class TypeBoxComponent implements OnInit {
   private reset() {
     this.wordsGenerator.generateWords()
     this.index = 0
-    this.input = ''
     let counter = 0
-    while (counter == Settings.NUMBER_OF_WORDS)
-      this.colorWord(counter, Colors.BLANK)
-      counter++
+    this.wordsGenerator.wordsObservable.subscribe(() => {
+        while (!(counter == Settings.NUMBER_OF_WORDS)) {
+          this.removeColor(counter)
+          counter++
+        }
+      }
+    ).unsubscribe()
   }
 }

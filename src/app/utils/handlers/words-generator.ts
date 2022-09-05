@@ -19,7 +19,6 @@ export class WordsGenerator {
     this.getWordsJson().subscribe(
       words => {
         this.setWordsBehaviourSubject(this.getRandomFromArray(words, Settings.NUMBER_OF_WORDS))
-        console.log(words)
       }
     )
   }

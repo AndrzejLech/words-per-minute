@@ -1,3 +1,3 @@
 export enum Settings{
-  NUMBER_OF_WORDS = 20
+  NUMBER_OF_WORDS = 100
 }
