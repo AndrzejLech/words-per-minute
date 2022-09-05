@@ -1,0 +1,6 @@
+@use "@angular/material" as mat;
+@import "../../../styles.scss";
+
+#id0{
+color: mat.get-color-from-palette($accent, default);
+}
