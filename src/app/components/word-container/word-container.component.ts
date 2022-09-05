@@ -22,5 +22,4 @@ export class WordContainerComponent implements OnInit {
   ngOnInit(): void {
     this.wordsGenerator.generateWords()
   }
-
 }

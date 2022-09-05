@@ -14,13 +14,18 @@ export class TypeBoxComponent implements OnInit {
   index: number = 0
   goodWords: number = 0
   timerState: boolean = false
-
+  timerEnded: boolean = false
 
   constructor(
     private wordsGenerator: WordsGenerator,
     private timerHandler: TimerHandler
   ) {
     timerHandler.timerStateObservable.subscribe(state => this.timerState = state)
+    timerHandler.timerEndedObservable.subscribe(ended => {
+      console.log(ended)
+        this.timerEnded = ended
+      }
+    )
   }
 
   ngOnInit(): void {
@@ -49,13 +54,8 @@ export class TypeBoxComponent implements OnInit {
 
 
       if (this.index === Settings.NUMBER_OF_WORDS) {
-        // TODO: show popup with score
         this.reset()
-      }else{
-        this.colorWord(this.index, Colors.AMBER)
-      }
-
-      if (this.index != 0) {
+      } else {
         this.colorWord(this.index, Colors.AMBER)
       }
     }
@@ -63,12 +63,12 @@ export class TypeBoxComponent implements OnInit {
 
   private colorWord(index: number, color: Colors) {
     document.getElementById("id" + String(index))!.classList.add(color)
-    if(color != Colors.AMBER) {
+    if (color != Colors.AMBER) {
       document.getElementById("id" + String(index))!.classList.remove(Colors.AMBER)
     }
   }
 
-  private removeColor(index: number){
+  private removeColor(index: number) {
     document.getElementById("id" + String(index))!.classList.remove(Colors.AMBER, Colors.WRONG, Colors.CORRECT)
   }
 

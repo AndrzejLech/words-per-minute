@@ -1,7 +1,8 @@
 <div fxLayout="column" fxLayoutAlign="center">
   <mat-form-field appearance="fill">
     <mat-label>Type words in here...</mat-label>
-    <input matInput (keydown)="onClick($event)" [(ngModel)]="input">
+    <input [disabled]="timerEnded" matInput (keydown)="onClick($event)" [(ngModel)]="input">
   </mat-form-field>
+  <button *ngIf="timerEnded"  mat-raised-button color="accent">Restart</button>
   <small class="mat-hint">Use ENTER or SPACE to accept you words.</small>
 </div>

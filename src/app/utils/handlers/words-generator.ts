@@ -1,4 +1,7 @@
-import {HttpClient} from "@angular/common/http";
+import {HttpClient} from "@angular/common/http";export class WordPerMinuteHandler {
+
+}
+
 import {BehaviorSubject, Observable} from "rxjs";
 import {Injectable} from "@angular/core";
 import {Settings} from "../enums/settings";
