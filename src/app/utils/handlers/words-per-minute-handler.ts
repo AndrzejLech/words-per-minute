@@ -21,7 +21,10 @@ export class WordsPerMinuteHandler {
       this.correctWordsNumber.subscribe(words => {
         let timeElapsed = (Settings.TIME_LIMIT - time)
         let wordPerMinute = (words / (timeElapsed / 60))
-        this.setWordsPerMinute(wordPerMinute)
+  
+        if (timeElapsed != 0) {
+          this.setWordsPerMinute(wordPerMinute)
+        }
       })
 
     })
