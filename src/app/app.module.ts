@@ -12,8 +12,9 @@ import {WordsGenerator} from "./utils/handlers/words-generator";
 import {HttpClientModule} from "@angular/common/http";
 import {TypeBoxComponent} from './components/type-box/type-box.component';
 import {FormsModule} from "@angular/forms";
-import {StateComponent} from './components/state/state.component';
+import {StateBoxComponent} from './components/state-box/state-box.component';
 import {TimerHandler} from "./utils/handlers/timer-handler";
+import { WordsPerMinuteHandler } from './utils/handlers/words-per-minute-handler';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,7 @@ import {TimerHandler} from "./utils/handlers/timer-handler";
     GameComponent,
     WordContainerComponent,
     TypeBoxComponent,
-    StateComponent
+    StateBoxComponent
   ],
   imports: [
     BrowserModule,
@@ -34,7 +35,8 @@ import {TimerHandler} from "./utils/handlers/timer-handler";
   ],
   providers: [
     WordsGenerator,
-    TimerHandler
+    TimerHandler,
+    WordsPerMinuteHandler
   ],
   bootstrap: [AppComponent]
 })

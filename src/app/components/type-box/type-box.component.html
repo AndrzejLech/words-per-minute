@@ -1,8 +1,12 @@
 <div fxLayout="column" fxLayoutAlign="center">
-  <mat-form-field appearance="fill">
+  <mat-form-field *ngIf="!timerEnded" appearance="fill">
     <mat-label>Type words in here...</mat-label>
-    <input [disabled]="timerEnded" matInput (keydown)="onClick($event)" [(ngModel)]="input">
+    <input [disabled]="timerEnded" matInput (keydown)="OnKeyPressed($event)" [(ngModel)]="input">
   </mat-form-field>
-  <button *ngIf="timerEnded"  mat-raised-button color="accent">Restart</button>
-  <small class="mat-hint">Use ENTER or SPACE to accept you words.</small>
+  <div fxLayoutAlign="center">
+    <h2 *ngIf="timerEnded">TIME'S UP!</h2>
+  </div>
+
+  <button *ngIf="timerEnded" (click)="onResetButtonCLick()" mat-raised-button color="accent">Restart</button>
+  <small *ngIf="!timerEnded" class="mat-hint">Use ENTER or SPACE to accept you words.</small>
 </div>

@@ -2,14 +2,14 @@ import {BehaviorSubject, Observable, timer} from "rxjs";
 import {Settings} from "../enums/settings";
 
 export class TimerHandler {
-  private timerBehaviorSubject: BehaviorSubject<number> = new BehaviorSubject(Settings.TIME_LIMIT)
-  timerObservable: Observable<number> = this.timerBehaviorSubject.asObservable()
+  private _timerValue: BehaviorSubject<number> = new BehaviorSubject(Settings.TIME_LIMIT)
+  timerValue: Observable<number> = this._timerValue.asObservable()
 
-  private timerStateBehaviorSubject: BehaviorSubject<boolean> = new BehaviorSubject(false)
-  timerStateObservable: Observable<boolean> = this.timerStateBehaviorSubject.asObservable()
+  private _timerState: BehaviorSubject<boolean> = new BehaviorSubject(false)
+  timerState: Observable<boolean> = this._timerState.asObservable()
 
-  private timerEndedBehaviorSubject: BehaviorSubject<boolean> = new BehaviorSubject(false)
-  timerEndedObservable: Observable<boolean> = this.timerStateBehaviorSubject.asObservable()
+  private _timerEnded: BehaviorSubject<boolean> = new BehaviorSubject(false)
+  timerEnded: Observable<boolean> = this._timerEnded.asObservable()
 
   timeLimit: number = Settings.TIME_LIMIT
 
@@ -17,25 +17,23 @@ export class TimerHandler {
     let timerSubscription = timer(0, 1000).subscribe(time => {
       this.setTimer(this.timeLimit - time)
     })
-    this.timerObservable.subscribe(time => {
-      console.log(time)
+    this.timerValue.subscribe(time => {
       if (time === 0) {
-        console.log("cock")
         this.setTimeEnded(true)
         timerSubscription.unsubscribe()
       }
     })
   }
 
-  private setTimer(value: number) {
-    this.timerBehaviorSubject.next(value)
+  setTimer(value: number) {
+    this._timerValue.next(value)
   }
 
   setTimerState(bool: boolean){
-    this.timerStateBehaviorSubject.next(bool)
+    this._timerState.next(bool)
   }
 
   setTimeEnded(bool: boolean){
-    this.timerEndedBehaviorSubject.next(bool)
+    this._timerEnded.next(bool)
   }
 }

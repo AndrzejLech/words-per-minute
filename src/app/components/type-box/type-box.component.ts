@@ -3,6 +3,7 @@ import {Colors} from "../../utils/enums/colors";
 import {WordsGenerator} from "../../utils/handlers/words-generator";
 import {Settings} from "../../utils/enums/settings";
 import {TimerHandler} from "../../utils/handlers/timer-handler";
+import { WordsPerMinuteHandler } from 'src/app/utils/handlers/words-per-minute-handler';
 
 @Component({
   selector: 'app-type-box',
@@ -12,46 +13,33 @@ import {TimerHandler} from "../../utils/handlers/timer-handler";
 export class TypeBoxComponent implements OnInit {
   input: string = ''
   index: number = 0
-  goodWords: number = 0
+  correctWords: number = 0
   timerState: boolean = false
   timerEnded: boolean = false
 
   constructor(
     private wordsGenerator: WordsGenerator,
-    private timerHandler: TimerHandler
+    private timerHandler: TimerHandler,
+    private wordsPerMinuteHandler: WordsPerMinuteHandler,
   ) {
-    timerHandler.timerStateObservable.subscribe(state => this.timerState = state)
-    timerHandler.timerEndedObservable.subscribe(ended => {
-      console.log(ended)
-        this.timerEnded = ended
-      }
-    )
+    timerHandler.timerState.subscribe(state => this.timerState = state)
+    timerHandler.timerEnded.subscribe(ended => this.timerEnded = ended)
   }
 
   ngOnInit(): void {
   }
 
-  onClick(event: any) {
+  OnKeyPressed(event: any) {
     if (event.key === ' ' || event.key === 'Enter') {
-      if (!this.timerState) {
-        this.timerHandler.startTimer()
-        this.timerHandler.setTimerState(true)
-      }
+      this.startTimerIfNeeded()
 
       if (event.key === ' ') {
         this.input = this.input.trim()
       }
 
-      if (this.getWord(this.index) === this.input) {
-        this.colorWord(this.index, Colors.CORRECT)
-        this.goodWords++
-      } else {
-        this.colorWord(this.index, Colors.WRONG)
-      }
-
+      this.gradeWords()
       this.index++
       this.input = ''
-
 
       if (this.index === Settings.NUMBER_OF_WORDS) {
         this.reset()
@@ -59,6 +47,13 @@ export class TypeBoxComponent implements OnInit {
         this.colorWord(this.index, Colors.AMBER)
       }
     }
+  }
+
+  onResetButtonCLick(){
+    this.reset()
+    this.timerHandler.setTimerState(false)
+    this.timerHandler.setTimeEnded(false)
+    this.timerHandler.setTimer(Settings.TIME_LIMIT)
   }
 
   private colorWord(index: number, color: Colors) {
@@ -87,5 +82,23 @@ export class TypeBoxComponent implements OnInit {
         }
       }
     ).unsubscribe()
+  }
+
+  private startTimerIfNeeded() {
+    if (!this.timerState) {
+      this.timerHandler.startTimer()
+      this.timerHandler.setTimerState(true)
+      this.wordsPerMinuteHandler.calculateWordsPerMinute()
+    }
+  }
+
+  private gradeWords() {
+    if (this.getWord(this.index) === this.input) {
+      this.colorWord(this.index, Colors.CORRECT)
+      this.wordsPerMinuteHandler.setCorrectWords(++this.correctWords)
+    } else {
+      this.colorWord(this.index, Colors.WRONG)
+    }
+
   }
 }
