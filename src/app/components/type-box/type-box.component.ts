@@ -54,6 +54,8 @@ export class TypeBoxComponent implements OnInit {
     this.timerHandler.setTimerState(false)
     this.timerHandler.setTimeEnded(false)
     this.timerHandler.setTimer(Settings.TIME_LIMIT)
+    this.wordsPerMinuteHandler.setWordsPerMinute(0)
+    this.wordsPerMinuteHandler.setCorrectWords(0)
   }
 
   private colorWord(index: number, color: Colors) {
