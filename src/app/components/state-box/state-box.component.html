@@ -1,14 +1,30 @@
-<mat-card fxLayout="row" fxLayoutGap="4">
-  <div>
-    <p>WPM:</p>
-    <p>{{wordsPerMinute.toFixed(2)}}</p>
+<mat-card fxLayoutGap="4">
+  <div fxLayout="row" fxLayoutGap="4">
+    <div>
+      <p>WPM:</p>
+      <p>{{wordsPerMinute.toFixed(2)}}</p>
+    </div>
+    <div>
+      <p>Time: </p>
+      <p>{{timer}} sec</p>
+    </div>
+    <div>
+      <p>Score:</p>
+      <p>{{score.toFixed(0)}}</p>
+    </div>
   </div>
-  <div>
-    <p>Time: </p>
-    <p>{{timer}} sec</p>
-  </div>
-  <div>
-    <p>Score:</p>
-    <p>0000</p>
+  <div fxLayout="row" fxLayoutGap="4">
+    <div>
+      <p>Combo:</p>
+      <p>x{{combo}}</p>
+    </div>
+    <div>
+      <p>Max combo:</p>
+      <p>x{{maxCombo}}</p>
+    </div>
+    <div>
+      <p>Correct words:</p>
+      <p>{{totalCorrectWords}}</p>
+    </div>
   </div>
 </mat-card>

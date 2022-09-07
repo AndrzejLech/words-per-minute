@@ -1,6 +1,6 @@
 export enum Colors{
   WHITE = 'white',
-  AMBER = 'amber',
+  BLUE = 'blue',
   WRONG = 'wrong',
   CORRECT = 'correct',
   BLANK = ''

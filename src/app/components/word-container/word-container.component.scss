@@ -1,17 +1,6 @@
 @use "@angular/material" as mat;
 @import "../../../styles.scss";
 
-#id0{
-color: mat.get-color-from-palette($accent, default);
-}
-
-.amber{
-  color: #ff6f00 !important;
-}
-
-.wrong {
-  color: #f44336 !important;
-}
-.correct {
-  color: #8bc34a !important;
+#id0 {
+  color: mat.get-color-from-palette($accent, default);
 }

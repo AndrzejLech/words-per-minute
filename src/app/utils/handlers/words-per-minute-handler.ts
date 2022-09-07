@@ -6,7 +6,7 @@ import { TimerHandler } from "./timer-handler";
 @Injectable()
 export class WordsPerMinuteHandler {
   private _correctWordsNumber: BehaviorSubject<number> = new BehaviorSubject(0)
-  correctWordsNumber: Observable<number> = this._correctWordsNumber.asObservable()
+  totalCorrectWords: Observable<number> = this._correctWordsNumber.asObservable()
 
   private _wordsPerMinute: BehaviorSubject<number> = new BehaviorSubject(0)
   wordsPerMinute: Observable<number> = this._wordsPerMinute.asObservable()
@@ -16,9 +16,9 @@ export class WordsPerMinuteHandler {
   ) {
   }
 
-  calculateWordsPerMinute() {
+  calculateWordsPerMinute(): void {
     this.timerHandler.timerValue.subscribe(time => {
-      this.correctWordsNumber.subscribe(words => {
+      this.totalCorrectWords.subscribe(words => {
         let timeElapsed = (Settings.TIME_LIMIT - time)
         let wordPerMinute = (words / (timeElapsed / 60))
   

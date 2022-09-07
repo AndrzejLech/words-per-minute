@@ -1,9 +1,10 @@
-import {Component, OnInit} from '@angular/core';
-import {Colors} from "../../utils/enums/colors";
-import {WordsGenerator} from "../../utils/handlers/words-generator";
-import {Settings} from "../../utils/enums/settings";
-import {TimerHandler} from "../../utils/handlers/timer-handler";
+import { Component, OnInit } from '@angular/core';
+import { ScoreHandler } from 'src/app/utils/handlers/score-handler';
 import { WordsPerMinuteHandler } from 'src/app/utils/handlers/words-per-minute-handler';
+import { Colors } from "../../utils/enums/colors";
+import { Settings } from "../../utils/enums/settings";
+import { TimerHandler } from "../../utils/handlers/timer-handler";
+import { WordsGenerator } from "../../utils/handlers/words-generator";
 
 @Component({
   selector: 'app-type-box',
@@ -14,6 +15,8 @@ export class TypeBoxComponent implements OnInit {
   input: string = ''
   index: number = 0
   correctWords: number = 0
+  combo: number = 0
+  maxCombo: number = 0
   timerState: boolean = false
   timerEnded: boolean = false
 
@@ -21,12 +24,13 @@ export class TypeBoxComponent implements OnInit {
     private wordsGenerator: WordsGenerator,
     private timerHandler: TimerHandler,
     private wordsPerMinuteHandler: WordsPerMinuteHandler,
+    private scoreHandler: ScoreHandler
   ) {
-    timerHandler.timerState.subscribe(state => this.timerState = state)
-    timerHandler.timerEnded.subscribe(ended => this.timerEnded = ended)
   }
 
   ngOnInit(): void {
+    this.timerHandler.timerState.subscribe(state => this.timerState = state)
+    this.timerHandler.timerEnded.subscribe(ended => this.timerEnded = ended)
   }
 
   OnKeyPressed(event: any) {
@@ -44,12 +48,12 @@ export class TypeBoxComponent implements OnInit {
       if (this.index === Settings.NUMBER_OF_WORDS) {
         this.reset()
       } else {
-        this.colorWord(this.index, Colors.AMBER)
+        this.colorWord(this.index, Colors.BLUE)
       }
     }
   }
 
-  onResetButtonCLick(){
+  onResetButtonCLick() {
     this.reset()
     this.timerHandler.setTimerState(false)
     this.timerHandler.setTimeEnded(false)
@@ -60,13 +64,13 @@ export class TypeBoxComponent implements OnInit {
 
   private colorWord(index: number, color: Colors) {
     document.getElementById("id" + String(index))!.classList.add(color)
-    if (color != Colors.AMBER) {
-      document.getElementById("id" + String(index))!.classList.remove(Colors.AMBER)
+    if (color != Colors.BLUE) {
+      document.getElementById("id" + String(index))!.classList.remove(Colors.BLUE)
     }
   }
 
   private removeColor(index: number) {
-    document.getElementById("id" + String(index))!.classList.remove(Colors.AMBER, Colors.WRONG, Colors.CORRECT)
+    document.getElementById("id" + String(index))!.classList.remove(Colors.BLUE, Colors.WRONG, Colors.CORRECT)
   }
 
   private getWord(index: number): string {
@@ -78,11 +82,11 @@ export class TypeBoxComponent implements OnInit {
     this.index = 0
     let counter = 0
     this.wordsGenerator.wordsObservable.subscribe(() => {
-        while (!(counter == Settings.NUMBER_OF_WORDS)) {
-          this.removeColor(counter)
-          counter++
-        }
+      while (!(counter == Settings.NUMBER_OF_WORDS)) {
+        this.removeColor(counter)
+        counter++
       }
+    }
     ).unsubscribe()
   }
 
@@ -95,12 +99,21 @@ export class TypeBoxComponent implements OnInit {
   }
 
   private gradeWords() {
+
     if (this.getWord(this.index) === this.input) {
       this.colorWord(this.index, Colors.CORRECT)
       this.wordsPerMinuteHandler.setCorrectWords(++this.correctWords)
+      this.scoreHandler.setCurrentCombo(++this.combo)
     } else {
       this.colorWord(this.index, Colors.WRONG)
+      this.scoreHandler.setCurrentCombo(this.combo = 0)
     }
+    this.calculateMaxCombo()
+  }
 
+  private calculateMaxCombo() {
+    if (this.combo > this.maxCombo || this.combo == this.maxCombo) {
+      this.scoreHandler.setMaxCombo(this.maxCombo = this.combo)
+    }
   }
 }
