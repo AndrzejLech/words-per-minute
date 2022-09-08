@@ -22,7 +22,7 @@ export class WordsPerMinuteHandler {
         let timeElapsed = (Settings.TIME_LIMIT - time)
         let wordPerMinute = (words / (timeElapsed / 60))
   
-        if (timeElapsed != 0) {
+        if (timeElapsed != 0 || time != Settings.TIME_LIMIT) {
           this.setWordsPerMinute(wordPerMinute)
         }
       })

@@ -60,6 +60,8 @@ export class TypeBoxComponent implements OnInit {
     this.timerHandler.setTimer(Settings.TIME_LIMIT)
     this.wordsPerMinuteHandler.setWordsPerMinute(0)
     this.wordsPerMinuteHandler.setCorrectWords(0)
+    this.scoreHandler.setCurrentCombo(0)
+    this.scoreHandler.setMaxCombo(0)
   }
 
   private colorWord(index: number, color: Colors) {

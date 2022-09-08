@@ -32,7 +32,10 @@ export class StateBoxComponent implements OnInit {
       this.timer = time
     })
     this.wordsPerMinuteHandler.wordsPerMinute.subscribe(wordsPerMinute => this.wordsPerMinute = wordsPerMinute)
-    this.scoreHandler.combo.subscribe(combo => this.combo = combo)
+    this.scoreHandler.combo.subscribe(combo => {
+      this.comboSum += this.combo
+      this.combo = combo
+    })
     this.scoreHandler.maxCombo.subscribe(maxCombo => this.maxCombo = maxCombo)
     this.wordsPerMinuteHandler.totalCorrectWords.subscribe(totalCorrectWords => this.totalCorrectWords = totalCorrectWords)
     this.scoreHandler.score.subscribe(score => this.score = score)
