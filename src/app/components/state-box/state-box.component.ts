@@ -27,25 +27,14 @@ export class StateBoxComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.timerHandler.timerValue.subscribe(time => this.timer = time)
+    this.timerHandler.timerValue.subscribe(time => {
+      this.scoreHandler.setScore(this.score = (this.wordsPerMinute * 100) + this.comboSum + this.totalCorrectWords)
+      this.timer = time
+    })
     this.wordsPerMinuteHandler.wordsPerMinute.subscribe(wordsPerMinute => this.wordsPerMinute = wordsPerMinute)
     this.scoreHandler.combo.subscribe(combo => this.combo = combo)
     this.scoreHandler.maxCombo.subscribe(maxCombo => this.maxCombo = maxCombo)
     this.wordsPerMinuteHandler.totalCorrectWords.subscribe(totalCorrectWords => this.totalCorrectWords = totalCorrectWords)
     this.scoreHandler.score.subscribe(score => this.score = score)
-
-    this.score = (this.wordsPerMinute * 100) + this.combo + this.totalCorrectWords
-
-    this.scoreHandler.combo.subscribe(combo => {
-      this.comboSum = this.comboSum + combo
-      this.wordsPerMinuteHandler.totalCorrectWords.subscribe(correctWords => {
-        this.scoreHandler.combo.subscribe(score => {
-          this.wordsPerMinuteHandler.wordsPerMinute.subscribe(wordsPerMinute => {
-            this.scoreHandler.setScore(this.score = (this.wordsPerMinute * 100) + this.comboSum + this.totalCorrectWords)
-          }).unsubscribe
-        }).unsubscribe
-      }).unsubscribe
-    }).unsubscribe
   }
-
 }

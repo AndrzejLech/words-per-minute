@@ -13,13 +13,12 @@ export class WordContainerComponent implements OnInit {
   constructor(
     private wordsGenerator: WordsGenerator
   ) {
-    this.wordsGenerator.wordsObservable.subscribe(words =>
-      this.words = words
-
-    )
   }
 
   ngOnInit(): void {
     this.wordsGenerator.generateWords()
+    this.wordsGenerator.wordsObservable.subscribe(words =>
+      this.words = words
+    )
   }
 }
